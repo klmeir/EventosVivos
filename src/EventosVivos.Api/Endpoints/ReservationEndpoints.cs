@@ -15,7 +15,8 @@ namespace EventosVivos.Api.Endpoints
                 Results.Ok(await mediator.Send(new GetReservationsByEventQuery(eventId))));
 
             group.MapPost("/{id:guid}/confirm", async (Guid id, ISender mediator) =>
-                Results.Ok(await mediator.Send(new ConfirmPaymentCommand(id))));
+                Results.Ok(await mediator.Send(new ConfirmPaymentCommand(id))))
+                .RequireAuthorization("AdminOnly");
 
             group.MapPost("/{id:guid}", async (Guid id, ISender mediator) =>
                 Results.Ok(await mediator.Send(new CancelReservationCommand(id))));

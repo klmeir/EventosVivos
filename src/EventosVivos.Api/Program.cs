@@ -5,10 +5,12 @@ using EventosVivos.Api.Middleware;
 using EventosVivos.Application;
 using EventosVivos.Application.Interfaces;
 using EventosVivos.Infrastructure;
-using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using System.Text;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -39,6 +41,21 @@ try
 
     builder.Services.AddHealthChecks();
 
+    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options => {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Secret"]!)),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
+    builder.Services.AddAuthorization(options =>
+    {
+        options.AddPolicy("AdminOnly", policy => policy.RequireRole("admin"));
+    });
+
     builder.Services.AddScoped<ICorrelationContext, CorrelationContext>();
 
     // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -59,6 +76,9 @@ try
     app.UseMiddleware<CorrelationIdMiddleware>();
     app.UseMiddleware<ExceptionHandlingMiddleware>();
 
+    app.UseAuthentication();
+    app.UseAuthorization();
+
     app.MapHealthChecks("/healthz", new HealthCheckOptions
     {
         ResultStatusCodes =
@@ -68,7 +88,8 @@ try
             [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
         }
     });
-    
+
+    app.MapGroup("/api/auth").MapAuthEndpoints();
     app.MapGroup("/api/venues").MapVenueEndpoints();
     app.MapGroup("/api/events").MapEventEndpoints();
     app.MapGroup("/api/reservations").MapReservationEndpoints();

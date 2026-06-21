@@ -1,4 +1,4 @@
-@EventosVivos.Api_HostAddress = http://localhost:5244
+@EventosVivos.Api_HostAddress = https://localhost:7057
 
 GET {{EventosVivos.Api_HostAddress}}/api/events
 Accept: application/json
@@ -23,7 +23,7 @@ GET {{EventosVivos.Api_HostAddress}}/api/events?type=Concert&titleSearch=Rock
 
 ### 3. Reserve tickets (RF-03)
 # Replace the eventId with the ID generated in the previous response.
-@eventId = 278fab6f-7844-402b-bc07-ce4e8a884536
+@eventId = 4453f3a6-d198-4db5-8ac8-784ed7bcbe01
 
 POST {{EventosVivos.Api_HostAddress}}/api/reservations
 Content-Type: application/json
@@ -38,23 +38,36 @@ Content-Type: application/json
 ### 4. List reservations for an event
 GET {{EventosVivos.Api_HostAddress}}/api/reservations/event/{{eventId}}
 
-### 5. Confirm reservation payment (RF-04)
-# Replace reservationId
-@reservationId = 9aa91d40-8959-416c-a623-3f37db3c5173
+### 5. Confirm reservation payment (RF-04) - PROTECTED
+# Replace reservationId and token
+@reservationId = e7e20af4-8e07-4845-ac9f-a32b9cab820a
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW4iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1pbiIsImV4cCI6MTc4MjA2OTUxMCwiaXNzIjoiRXZlbnRvc1Zpdm9zQXBpIiwiYXVkIjoiRXZlbnRvc1Zpdm9zQXBwIn0.4CHgHHARJS2lbm2TjJBH7gQ1U_PSXoQfot6LqECAhnU
 
 POST {{EventosVivos.Api_HostAddress}}/api/reservations/{{reservationId}}/confirm
+Authorization: Bearer {{token}}
+Content-Type: application/json
 
-### 6. Cancelar reserva (RF-05)
+### 6. Cancel reservation (RF-05)
 POST {{EventosVivos.Api_HostAddress}}/api/reservations/{{reservationId}}
 
 ### 7. Obtener detalle de evento específico (RF-02 - Detalle)
 GET {{EventosVivos.Api_HostAddress}}/api/events/{{eventId}}
 Accept: application/json
 
-### 8. Listar venues disponibles
+### 8. List available venues
 GET {{EventosVivos.Api_HostAddress}}/api/venues
 Accept: application/json
 
-### 8. Listar venues disponibles
+### 9. Check health status
 GET {{EventosVivos.Api_HostAddress}}/healthz
 Accept: application/json
+
+### 10. Login (Autenticación)
+# This endpoint returns the token required for protected operations
+POST {{EventosVivos.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "Password123!"
+}

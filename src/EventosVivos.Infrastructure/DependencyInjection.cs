@@ -3,6 +3,7 @@ using EventosVivos.Domain.Ports;
 using EventosVivos.Domain.Services;
 using EventosVivos.Infrastructure.Data;
 using EventosVivos.Infrastructure.Repositories;
+using EventosVivos.Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +30,8 @@ namespace EventosVivos.Infrastructure
             services.AddScoped<ApplicationDbSeeder>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddScoped<IAuthService, AuthService>();
 
             return services;
         }
