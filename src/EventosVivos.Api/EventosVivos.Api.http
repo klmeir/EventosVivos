@@ -48,7 +48,7 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 ### 6. Cancel reservation (RF-05)
-POST {{EventosVivos.Api_HostAddress}}/api/reservations/{{reservationId}}
+POST {{EventosVivos.Api_HostAddress}}/api/reservations/{{reservationId}}/cancel
 
 ### 7. Obtener detalle de evento específico (RF-02 - Detalle)
 GET {{EventosVivos.Api_HostAddress}}/api/events/{{eventId}}

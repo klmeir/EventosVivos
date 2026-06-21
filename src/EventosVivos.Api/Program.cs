@@ -55,6 +55,16 @@ try
     {
         options.AddPolicy("AdminOnly", policy => policy.RequireRole("admin"));
     });
+    
+    var allowedOrigins = builder.Configuration.GetSection("AllowedCorsOrigins").Get<string[]>() ?? Array.Empty<string>();
+    
+    builder.Services.AddCors(options => {
+        options.AddPolicy("AllowSpecificOrigins", policy => {
+            policy.WithOrigins(allowedOrigins)
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+    });
 
     builder.Services.AddScoped<ICorrelationContext, CorrelationContext>();
 
@@ -78,6 +88,8 @@ try
 
     app.UseAuthentication();
     app.UseAuthorization();
+
+    app.UseCors("AllowSpecificOrigins");
 
     app.MapHealthChecks("/healthz", new HealthCheckOptions
     {
