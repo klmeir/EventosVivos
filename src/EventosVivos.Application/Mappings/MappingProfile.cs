@@ -7,7 +7,15 @@ namespace EventosVivos.Application.Mappings
     public class MappingProfile : Profile
     {
         public MappingProfile()
-        {            
+        {
+            CreateMap<Venue, VenueDto>()
+                .ConstructUsing(src => new VenueDto(
+                    src.Id,
+                    src.Name,
+                    src.Capacity,
+                    src.City
+                )).ForAllMembers(opt => opt.Ignore());
+
             CreateMap<Event, EventDto>()
                 .ConstructUsing(src => new EventDto(
                     src.Id,

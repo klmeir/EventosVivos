@@ -1,8 +1,10 @@
-﻿namespace EventosVivos.Domain.Ports
+﻿using EventosVivos.Domain.Entities;
+
+namespace EventosVivos.Domain.Ports
 {
     public interface IVenueRepository
     {
-        // Solo necesitamos la capacidad para validar RN-01 en el momento de crear el Evento
+        Task<IEnumerable<Venue>> GetAllAsync();
         Task<int?> GetVenueCapacityAsync(Guid venueId);
     }
 }

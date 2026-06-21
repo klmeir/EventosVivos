@@ -1,3 +1,13 @@
+using EventosVivos.Api.Common;
+using EventosVivos.Api.Endpoints;
+using EventosVivos.Api.Extensions;
+using EventosVivos.Api.Middleware;
+using EventosVivos.Application;
+using EventosVivos.Application.Interfaces;
+using EventosVivos.Infrastructure;
+using FluentValidation;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -14,11 +24,29 @@ try
        .ReadFrom.Configuration(builder.Configuration)
        .ReadFrom.Services(services));
 
+    builder.Services.ConfigureHttpJsonOptions(options =>
+    {
+        options.SerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });
+
     // Add services to the container.
+    builder.Services.AddHttpContextAccessor();
+    
+    builder.Services.AddApplication();
+    
+    builder.Services.AddInfrastructure(
+        builder.Configuration);
+
+    builder.Services.AddHealthChecks();
+
+    builder.Services.AddScoped<ICorrelationContext, CorrelationContext>();
+
     // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
     builder.Services.AddOpenApi();
 
     var app = builder.Build();
+
+    await app.InitializeDatabaseAsync();
 
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
@@ -28,13 +56,29 @@ try
 
     app.UseHttpsRedirection();
 
-    app.MapGet("/", () => "Hello EventosVivios!")
-        .WithName("GetHello");
+    app.UseMiddleware<CorrelationIdMiddleware>();
+    app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+    app.MapHealthChecks("/healthz", new HealthCheckOptions
+    {
+        ResultStatusCodes =
+        {
+            [HealthStatus.Healthy] = StatusCodes.Status200OK,
+            [HealthStatus.Degraded] = StatusCodes.Status200OK,
+            [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+        }
+    });
+    
+    app.MapGroup("/api/venues").MapVenueEndpoints();
+    app.MapGroup("/api/events").MapEventEndpoints();
+    app.MapGroup("/api/reservations").MapReservationEndpoints();
 
     app.Run();
 }
 catch (Exception ex)
 {
+    Console.WriteLine($"Critical Error: {ex.Message}");
+    Console.WriteLine($"Inner Exception: {ex.InnerException?.Message}");
     Log.Fatal(ex, "Server terminated unexpectedly.");
 }
 finally

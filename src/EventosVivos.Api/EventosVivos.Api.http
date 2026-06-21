@@ -1,6 +1,60 @@
 @EventosVivos.Api_HostAddress = http://localhost:5244
 
-GET {{EventosVivos.Api_HostAddress}}/weatherforecast/
+GET {{EventosVivos.Api_HostAddress}}/api/events
 Accept: application/json
 
-###
+### 1. Create a new event (RF-01)
+POST {{EventosVivos.Api_HostAddress}}/api/events
+Content-Type: application/json
+
+{
+  "title": "Concierto de Rock Sinfónico",
+  "description": "Una experiencia musical única con orquesta completa.",
+  "venueId": "11111111-1111-1111-1111-111111111111",
+  "maxCapacity": 10,
+  "startTime": "2026-07-25T19:00:00Z",
+  "endTime": "2026-07-25T22:00:00Z",
+  "price": 85.50,
+  "eventType": "Concert"
+}
+
+### 2. List events (RF-02)
+GET {{EventosVivos.Api_HostAddress}}/api/events?type=Concert&titleSearch=Rock
+
+### 3. Reserve tickets (RF-03)
+# Replace the eventId with the ID generated in the previous response.
+@eventId = 278fab6f-7844-402b-bc07-ce4e8a884536
+
+POST {{EventosVivos.Api_HostAddress}}/api/reservations
+Content-Type: application/json
+
+{
+  "eventId": "{{eventId}}",
+  "quantity": 5,
+  "buyerName": "Juan Pérez",
+  "buyerEmail": "juan.perez@ejemplo.com"
+}
+
+### 4. List reservations for an event
+GET {{EventosVivos.Api_HostAddress}}/api/reservations/event/{{eventId}}
+
+### 5. Confirm reservation payment (RF-04)
+# Replace reservationId
+@reservationId = 9aa91d40-8959-416c-a623-3f37db3c5173
+
+POST {{EventosVivos.Api_HostAddress}}/api/reservations/{{reservationId}}/confirm
+
+### 6. Cancelar reserva (RF-05)
+POST {{EventosVivos.Api_HostAddress}}/api/reservations/{{reservationId}}
+
+### 7. Obtener detalle de evento específico (RF-02 - Detalle)
+GET {{EventosVivos.Api_HostAddress}}/api/events/{{eventId}}
+Accept: application/json
+
+### 8. Listar venues disponibles
+GET {{EventosVivos.Api_HostAddress}}/api/venues
+Accept: application/json
+
+### 8. Listar venues disponibles
+GET {{EventosVivos.Api_HostAddress}}/healthz
+Accept: application/json
