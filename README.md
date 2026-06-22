@@ -19,7 +19,7 @@ La solución implementa una separación estricta de responsabilidades en capas c
 
 ```text
 /src                            # Código fuente del Backend (.NET)
-  /EventosVivos.Domain          # Entidades, Value Objects, Memento, Especificaciones
+  /EventosVivos.Domain          # Entidades, Value Objects
   /EventosVivos.Application     # CQRS (MediatR), Pipeline Behaviors, Validaciones, DTOs
   /EventosVivos.Infrastructure  # EF Core, Repositorios, SQLite
   /EventosVivos.Api             # Endpoints de API, Middlewares (Error, CorrelationId)
@@ -65,3 +65,19 @@ docker-compose up -d
 dotnet test
 ```
 ---
+
+## 🔑 Configuración de Autenticación (Admin)
+El sistema utiliza autenticación basada en credenciales configuradas estáticamente. No se requiere registro de usuarios administradores en la base de datos.
+
+Ruta de configuración: src/EventosVivos.Api/appsettings.json
+```bash
+{
+  "AdminCredentials": {
+    "Username": "admin",
+    "Password": "Password123!"
+  }
+}
+```
+
+Notas Importantes:
+Validación en Memoria: El sistema valida las credenciales de administrador directamente contra los valores definidos en el archivo appsettings.json.
