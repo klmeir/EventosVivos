@@ -6,6 +6,7 @@ import { Event } from '../event.model';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ReservationService } from '../../reservations/reservation.service';
 import { Reservation, ReservationCreateDto } from '../../reservations/reservation.model';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-event-details',
@@ -15,6 +16,7 @@ import { Reservation, ReservationCreateDto } from '../../reservations/reservatio
 })
 export class EventDetailsComponent implements OnInit {
   private route = inject(ActivatedRoute);
+  private authService = inject(AuthService);
   private eventService = inject(EventService);
   private resService = inject(ReservationService);
   private fb = inject(FormBuilder);
@@ -22,6 +24,7 @@ export class EventDetailsComponent implements OnInit {
   event = signal<Event | null>(null);
   reservations = signal<Reservation[]>([]);
   isLoading = signal(true);
+  isAdmin = this.authService.isAdmin;
 
   reservationForm = this.fb.group({
     quantity: [1, [Validators.required, Validators.min(1)]],

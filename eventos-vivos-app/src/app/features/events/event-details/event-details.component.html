@@ -60,7 +60,7 @@
                     </span>
                     @if (res.status !== 'Cancelled') {
                       <div class="btn-group">
-                          @if (res.status === 'PendingPayment') {                        
+                          @if (isAdmin() && res.status === 'PendingPayment') {                        
                               <button class="btn btn-sm btn-outline-success" (click)="confirmPayment(res.id!)">Confirm</button>                                                  
                           }
                           <button class="btn btn-sm btn-outline-danger" (click)="cancelReservation(res.id!)">Cancel</button>
