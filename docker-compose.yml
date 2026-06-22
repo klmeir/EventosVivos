@@ -1,0 +1,19 @@
+services:  
+  api:
+    build:
+      context: ./src
+      dockerfile: EventosVivos.Api/Dockerfile
+    container_name: eventosvivos-api
+    ports:
+      - "8000:8080"
+  frontend:
+    build:
+      context: ./eventos-vivos-app
+      dockerfile: Dockerfile
+      args:
+        - API_URL=http://localhost:8000/api
+    container_name: eventosvivos-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
