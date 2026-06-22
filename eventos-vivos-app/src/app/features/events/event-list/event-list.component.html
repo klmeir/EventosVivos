@@ -5,6 +5,44 @@
   </a>
 </div>
 
+<form [formGroup]="filterForm" (ngSubmit)="loadEvents()" class="row g-3 mb-4 bg-light p-3 rounded">
+  <div class="col-md-2">
+    <input formControlName="titleSearch" class="form-control" placeholder="Search by title...">
+  </div>
+  <div class="col-md-2">
+    <select formControlName="type" class="form-select">
+      <option value="">All Types</option>
+      <option value="Concert">Concert</option>
+      <option value="Conference">Conference</option>
+      <option value="Workshop">Workshop</option>
+    </select>
+  </div>
+  <div class="col-md-2">     
+    <input type="datetime-local" formControlName="startDate" class="form-control" placeholder="Start Date">
+  </div>
+  <div class="col-md-2">
+    <select formControlName="venueId" class="form-select">
+      <option value="">All Venues</option>
+       @for (venue of venues(); track venue.id) {
+          <option [value]="venue.id">
+            {{ venue.name }} ({{ venue.city }})
+          </option>
+        }
+    </select>
+  </div>
+  <div class="col-md-2">
+    <select formControlName="status" class="form-select">
+      <option value="">All Status</option>
+      <option value="Active">Active</option>
+      <option value="Cancelled">Cancelled</option>
+      <option value="Completed">Completed</option>
+    </select>
+  </div>
+  <div class="col-md-2">
+    <button type="submit" class="btn btn-outline-secondary w-100">Apply Filters</button>
+  </div>
+</form>
+
 @if (isLoading()) {
   <div class="text-center py-5">
     <div class="spinner-border" role="status"></div>
