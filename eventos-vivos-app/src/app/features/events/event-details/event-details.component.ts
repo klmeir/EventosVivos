@@ -25,6 +25,7 @@ export class EventDetailsComponent implements OnInit {
   reservations = signal<Reservation[]>([]);
   isLoading = signal(true);
   isAdmin = this.authService.isAdmin;
+  reservationResult = signal<{ id: string } | null>(null);
 
   reservationForm = this.fb.group({
     quantity: [1, [Validators.required, Validators.min(1)]],
@@ -64,8 +65,11 @@ export class EventDetailsComponent implements OnInit {
       };
 
       this.resService.createReservation(newReservation).subscribe({
-        next: () => {
+        next: (response: any) => {
           alert('Reservation confirmed successfully!');
+          
+          this.reservationResult.set({ id: response });
+
           this.reservationForm.reset({ quantity: 1 });
           // Refresh reservations list
           this.loadEventData(this.event()!.id);
@@ -91,5 +95,11 @@ export class EventDetailsComponent implements OnInit {
         this.loadEventData(this.event()!.id); // Refresh data
       });
     }
+  }
+
+  copyToClipboard(text: string) {
+    navigator.clipboard.writeText(text).then(() => {
+      alert('ID copied to the clipboard');
+    });
   }
 }

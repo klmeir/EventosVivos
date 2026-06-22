@@ -12,7 +12,8 @@ export const routes: Routes = [
             { path: 'events/create', loadComponent: () => import('./features/events/event-form/event-form.component').then(m => m.EventFormComponent) },
             { path: 'events/details/:id', loadComponent: () => import('./features/events/event-details/event-details.component').then(m => m.EventDetailsComponent) },
             { path: 'events/report/:id', loadComponent: () => import('./features/events/event-report/event-report.component').then(m => m.EventReportComponent) },
-            { path: 'reservations/cancel', loadComponent: () => import('./features/reservations/cancel-reservation/cancel-reservation.component').then(m => m.CancelReservationComponent) }
+            { path: 'reservations/cancel', loadComponent: () => import('./features/reservations/cancel-reservation/cancel-reservation.component').then(m => m.CancelReservationComponent) },
+            { path: 'reservations/cancel/:id', loadComponent: () => import('./features/reservations/cancel-reservation/cancel-reservation.component').then(m => m.CancelReservationComponent) },
         ]
   }
 ];

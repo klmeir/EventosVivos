@@ -1,8 +1,10 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h2>Available Events</h2>
-  <a routerLink="/events/create" class="btn btn-primary">
-    Create Event
-  </a>
+  @if (isAdmin()) {
+    <a routerLink="/events/create" class="btn btn-primary">
+      Create Event
+    </a>
+  }  
 </div>
 
 <form [formGroup]="filterForm" (ngSubmit)="loadEvents()" class="row g-3 mb-4 bg-light p-3 rounded">
@@ -81,9 +83,11 @@
               <a [routerLink]="['/events/details', event.id]" class="btn btn-sm btn-outline-primary">
                 View
               </a>
-              <a [routerLink]="['/events/report', event.id]" class="btn btn-sm btn-outline-info">
-                Report
-              </a>
+              @if (isAdmin()) {
+                 <a [routerLink]="['/events/report', event.id]" class="btn btn-sm btn-outline-info">
+                    Report
+                </a>
+              }             
             </td>
           </tr>
         } @empty {
