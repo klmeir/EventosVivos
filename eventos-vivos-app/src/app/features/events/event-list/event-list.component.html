@@ -43,6 +43,9 @@
               <a [routerLink]="['/events/details', event.id]" class="btn btn-sm btn-outline-primary">
                 View
               </a>
+              <a [routerLink]="['/events/report', event.id]" class="btn btn-sm btn-outline-info">
+                Report
+              </a>
             </td>
           </tr>
         } @empty {

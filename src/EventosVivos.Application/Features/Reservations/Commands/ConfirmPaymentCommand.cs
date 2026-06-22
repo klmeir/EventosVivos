@@ -12,14 +12,14 @@ namespace EventosVivos.Application.Features.Reservations.Commands
         public async Task<string> Handle(ConfirmPaymentCommand request, CancellationToken cancellationToken)
         {
             var reservation = await reservationRepository.GetByIdAsync(request.ReservationId)
-                ?? throw new KeyNotFoundException("Reserva no encontrada.");
+                ?? throw new KeyNotFoundException("The reservation could not be found.");
 
-            reservation.ConfirmPayment(); // Valida estados internamente
+            reservation.ConfirmPayment();
             await reservationRepository.UpdateAsync(reservation);
 
             await unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return reservation.Code; // Devuelve el código EV-XXXXXX
+            return reservation.Code;
         }
     }
 }

@@ -15,12 +15,11 @@ namespace EventosVivos.Application.Features.Reservations.Commands
         public async Task<bool> Handle(CancelReservationCommand request, CancellationToken cancellationToken)
         {
             var reservation = await reservationRepository.GetByIdAsync(request.ReservationId)
-                ?? throw new KeyNotFoundException("Reserva no encontrada.");
+                ?? throw new KeyNotFoundException("The reservation could not be found.");
 
             var eventObj = await eventRepository.GetByIdAsync(reservation.EventId)
-                ?? throw new KeyNotFoundException("Evento asociado no encontrado.");
-
-            // Ejecutamos cancelación validando RN-07 y aforos
+                ?? throw new KeyNotFoundException("No associated event found.");
+            
             bool ticketsReleased = reservation.Cancel(eventObj.Schedule.StartTime, DateTime.UtcNow);
 
             if (ticketsReleased)

@@ -26,8 +26,8 @@ namespace EventosVivos.Application.Features.Events.Commands
             RuleFor(x => x.Title).NotEmpty().Length(5, 100);
             RuleFor(x => x.Description).NotEmpty().Length(10, 500);
             RuleFor(x => x.MaxCapacity).GreaterThan(0);
-            RuleFor(x => x.StartTime).GreaterThan(DateTime.UtcNow).WithMessage("La fecha de inicio debe ser futura.");
-            RuleFor(x => x.EndTime).GreaterThan(x => x.StartTime).WithMessage("La fecha de fin debe ser posterior al inicio.");
+            RuleFor(x => x.StartTime).GreaterThan(DateTime.UtcNow).WithMessage("The start date must be in the future.");
+            RuleFor(x => x.EndTime).GreaterThan(x => x.StartTime).WithMessage("The end date must be after the start date.");
             RuleFor(x => x.Price).GreaterThan(0);
             RuleFor(x => x.EventType).IsInEnum();
         }
@@ -46,8 +46,7 @@ namespace EventosVivos.Application.Features.Events.Commands
             var price = new Money(request.Price);
 
             var venueCapacity = await venueRepository.GetVenueCapacityAsync(request.VenueId);
-
-            // La entidad valida RN-01, RN-02 y RN-03 internamente
+            
             var newEvent = await Event.CreateAsync(
                 request.Title, request.Description, request.VenueId, venueCapacity.HasValue ? venueCapacity.Value : 0,
                 request.MaxCapacity, schedule, price, request.EventType, availabilityChecker);

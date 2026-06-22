@@ -54,15 +54,19 @@ POST {{EventosVivos.Api_HostAddress}}/api/reservations/{{reservationId}}/cancel
 GET {{EventosVivos.Api_HostAddress}}/api/events/{{eventId}}
 Accept: application/json
 
-### 8. List available venues
+### 8. Obtener Reporte de Ocupación (RF-06)
+GET {{EventosVivos.Api_HostAddress}}/api/events/{{eventId}}/report
+Accept: application/json
+
+### 9. List available venues
 GET {{EventosVivos.Api_HostAddress}}/api/venues
 Accept: application/json
 
-### 9. Check health status
+### 10. Check health status
 GET {{EventosVivos.Api_HostAddress}}/healthz
 Accept: application/json
 
-### 10. Login (Autenticación)
+### 11. Login (Autenticación)
 # This endpoint returns the token required for protected operations
 POST {{EventosVivos.Api_HostAddress}}/api/auth/login
 Content-Type: application/json

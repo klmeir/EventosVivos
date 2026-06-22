@@ -11,8 +11,7 @@ namespace EventosVivos.Application.Features.Reservations.Queries
         : IRequestHandler<GetReservationsByEventQuery, List<ReservationDto>>
     {
         public async Task<List<ReservationDto>> Handle(GetReservationsByEventQuery request, CancellationToken cancellationToken)
-        {
-            // Se debe implementar el método en IReservationRepository
+        {            
             var reservations = await reservationRepository.GetByEventIdAsync(request.EventId);
 
             return mapper.Map<List<ReservationDto>>(reservations);

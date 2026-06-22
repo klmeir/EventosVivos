@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { ApiService } from '../../core/services/api.service';
 import { HttpParams } from '@angular/common/http';
-import { Event, EventFilters } from './event.model';
+import { Event, EventFilters, EventReport } from './event.model';
 
 @Injectable({ providedIn: 'root' })
 export class EventService {
@@ -25,5 +25,9 @@ export class EventService {
 
   getEventById(id: string) {
     return this.api.get<Event>(`/events/${id}`);
+  }
+
+  getEventReport(id: string) {
+    return this.api.get<EventReport>(`/events/${id}/report`);
   }
 }

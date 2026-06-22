@@ -19,3 +19,11 @@ export interface EventFilters {
   status?: string;
   titleSearch?: string;
 }
+
+export interface EventReport {
+  totalTicketsSold: number;
+  totalTicketsAvailable: number;
+  occupancyPercentage: number;
+  totalRevenue: number;
+  status: string;
+}

@@ -33,17 +33,16 @@ namespace EventosVivos.Application.Features.Reservations.Commands
         public async Task<Guid> Handle(CreateReservationCommand request, CancellationToken cancellationToken)
         {
             var eventObj = await eventRepository.GetByIdAsync(request.EventId)
-                ?? throw new KeyNotFoundException("Evento no encontrado.");
+                ?? throw new KeyNotFoundException("No associated event found.");
 
             var email = new EmailAddress(request.BuyerEmail);
-
-            // La entidad Event y Reservation validan RF-03, RN-04, RN-05
+            
             var reservation = Reservation.Create(eventObj, request.Quantity, request.BuyerName, email, DateTime.UtcNow);
 
             eventObj.ReserveTickets(request.Quantity);
 
             await reservationRepository.AddAsync(reservation);
-            await eventRepository.UpdateAsync(eventObj); // Actualiza la cantidad de tickets disponibles
+            await eventRepository.UpdateAsync(eventObj);
 
             await unitOfWork.SaveChangesAsync(cancellationToken);
 
