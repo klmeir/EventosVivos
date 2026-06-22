@@ -55,9 +55,13 @@ try
     {
         options.AddPolicy("AdminOnly", policy => policy.RequireRole("admin"));
     });
-    
-    var allowedOrigins = builder.Configuration.GetSection("AllowedCorsOrigins").Get<string[]>() ?? Array.Empty<string>();
-    
+        
+    var originsRaw = builder.Configuration.GetValue<string>("AllowedCorsOrigins");
+
+    var allowedOrigins = !string.IsNullOrEmpty(originsRaw)
+        ? originsRaw.Split(';', StringSplitOptions.RemoveEmptyEntries)
+        : Array.Empty<string>();
+
     builder.Services.AddCors(options => {
         options.AddPolicy("AllowSpecificOrigins", policy => {
             policy.WithOrigins(allowedOrigins)
