@@ -1,0 +1,29 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card p-4">
+        <h2>Cancel Reservation</h2>
+        
+        @if (success()) {
+          <div class="alert alert-success">
+            Reservation successfully cancelled.
+          </div>
+        } @else {
+          <form [formGroup]="form" (ngSubmit)="onCancel()">
+            <div class="mb-3">
+              <label>Reservation ID</label>
+              <input formControlName="reservationId" class="form-control" placeholder="e.g. 8041ed90-dd83-4766-afdf-008d28938e2e" />
+            </div>
+            <button type="submit" class="btn btn-danger" [disabled]="loading()">
+              {{ loading() ? 'Processing...' : 'Confirm Cancellation' }}
+            </button>
+          </form>
+        }
+
+        @if (error()) {
+          <div class="alert alert-danger mt-3">{{ error() }}</div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
