@@ -34,6 +34,9 @@ namespace EventosVivos.Infrastructure.Data.Configurations
 
             // Ignoramos la propiedad calculada
             builder.Ignore(e => e.CurrentStatus);
+
+            builder.Property(x => x.Version)
+                .IsConcurrencyToken();
         }
     }
 }

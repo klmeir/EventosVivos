@@ -3,6 +3,7 @@ using System;
 using EventosVivos.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventosVivos.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(EventosVivosDbContext))]
-    partial class EventosVivosDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260622082045_ImplementOptimisticConcurrencyControl")]
+    partial class ImplementOptimisticConcurrencyControl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.9");

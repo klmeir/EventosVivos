@@ -1,4 +1,5 @@
-﻿using EventosVivos.Domain.Exceptions;
+﻿using EventosVivos.Application.Exceptions;
+using EventosVivos.Domain.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,6 +32,14 @@ namespace EventosVivos.Api.Middleware
                 await WriteProblemDetails(
                     context,
                     StatusCodes.Status422UnprocessableEntity,
+                    ex.Message,
+                    ex);
+            }
+            catch (ConcurrencyException ex)
+            {
+                await WriteProblemDetails(
+                    context,
+                    StatusCodes.Status409Conflict,
                     ex.Message,
                     ex);
             }

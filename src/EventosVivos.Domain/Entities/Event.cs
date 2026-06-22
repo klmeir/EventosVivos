@@ -30,6 +30,8 @@ namespace EventosVivos.Domain.Entities
             }
         }
 
+        public uint Version { get; private set; }
+
         private Event() { }
 
         public static async Task<Event> CreateAsync(
@@ -97,6 +99,11 @@ namespace EventosVivos.Domain.Entities
         public void CancelEvent()
         {
             _status = EventStatus.Cancelled;
+        }
+
+        public void IncrementVersion()
+        {
+            Version++;
         }
     }
 }

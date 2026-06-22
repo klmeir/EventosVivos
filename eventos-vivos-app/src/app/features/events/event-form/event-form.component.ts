@@ -61,8 +61,7 @@ export class EventFormComponent implements OnInit {
             const allErrors = Object.values(err.error.errors)
                                     .map((e: any) => e[0])
                                     .join(' | ');
-
-            console.log(allErrors);
+            
             this.errorMessage.set(`Validation Errors: ${allErrors}`);
           }           
           else {
