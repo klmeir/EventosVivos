@@ -78,6 +78,13 @@
           </div>
         </div>
 
+        @if (errorMessage()) {
+          <div class="mt-4 alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> {{ errorMessage() }}
+            <button type="button" class="btn-close" (click)="errorMessage.set(null)"></button>
+          </div>
+        }         
+
         <div class="mt-4 d-flex gap-2">
           <button type="submit" class="btn btn-primary" [disabled]="isSubmitting()">
             @if (isSubmitting()) {

@@ -5,6 +5,7 @@ import { EventService } from '../event.service';
 import { NgClass } from '@angular/common';
 import { VenueService } from '../venue.service';
 import { Venue } from '../venue.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-event-form',
@@ -20,6 +21,7 @@ export class EventFormComponent implements OnInit {
 
   venues = signal<Venue[]>([]);
   isSubmitting = signal(false);
+  errorMessage = signal<string | null>(null);
 
   ngOnInit() {
     this.loadVenues();
@@ -46,6 +48,7 @@ export class EventFormComponent implements OnInit {
   });
 
   onSubmit() {
+    this.errorMessage.set(null);
     if (this.eventForm.valid) {
       this.isSubmitting.set(true);
       
@@ -53,8 +56,18 @@ export class EventFormComponent implements OnInit {
         next: () => {
           this.router.navigate(['/events']);
         },
-        error: (err) => {
-          console.error('Error creating event', err);
+        error: (err: HttpErrorResponse) => {          
+          if (err.status === 400 && err.error.errors) {            
+            const allErrors = Object.values(err.error.errors)
+                                    .map((e: any) => e[0])
+                                    .join(' | ');
+
+            console.log(allErrors);
+            this.errorMessage.set(`Validation Errors: ${allErrors}`);
+          }           
+          else {
+            this.errorMessage.set(err.error?.title || 'An unexpected error occurred');
+          }
           this.isSubmitting.set(false);
         }
       });

@@ -7,6 +7,7 @@ import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ReservationService } from '../../reservations/reservation.service';
 import { Reservation, ReservationCreateDto } from '../../reservations/reservation.model';
 import { AuthService } from '../../auth/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-event-details',
@@ -26,6 +27,7 @@ export class EventDetailsComponent implements OnInit {
   isLoading = signal(true);
   isAdmin = this.authService.isAdmin;
   reservationResult = signal<{ id: string } | null>(null);
+  errorMessage = signal<string | null>(null);
 
   reservationForm = this.fb.group({
     quantity: [1, [Validators.required, Validators.min(1)]],
@@ -56,6 +58,7 @@ export class EventDetailsComponent implements OnInit {
   }
 
   submitReservation() {
+    this.errorMessage.set(null);
     if (this.reservationForm.valid && this.event()) {
       const newReservation: ReservationCreateDto = {
         eventId: this.event()!.id,
@@ -74,7 +77,18 @@ export class EventDetailsComponent implements OnInit {
           // Refresh reservations list
           this.loadEventData(this.event()!.id);
         },
-        error: (err) => console.error('Error creating reservation', err)
+        error: (err: HttpErrorResponse) => {          
+          if (err.status === 400 && err.error.errors) {            
+            const allErrors = Object.values(err.error.errors)
+                                    .map((e: any) => e[0])
+                                    .join(' | ');
+            
+            this.errorMessage.set(`Validation Errors: ${allErrors}`);
+          }           
+          else {
+            this.errorMessage.set(err.error?.title || 'An unexpected error occurred');
+          }          
+        }
       });
     }
   }

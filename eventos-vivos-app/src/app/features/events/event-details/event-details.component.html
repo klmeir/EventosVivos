@@ -100,6 +100,12 @@
                 Confirm Reservation
               </button>
             </form>
+             @if (errorMessage()) {
+              <div class="mt-4 alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Error:</strong> {{ errorMessage() }}
+                <button type="button" class="btn-close" (click)="errorMessage.set(null)"></button>
+              </div>
+            }   
             @if (reservationResult(); as res) {
               <div class="card border-success mt-4">
                 <div class="card-body">
